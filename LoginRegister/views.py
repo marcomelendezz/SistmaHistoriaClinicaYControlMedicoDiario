@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import Group
+from .forms import RegistroForm, CustomLoginForm
 
 # Create your views here.
 def register_view(request):
