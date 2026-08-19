@@ -2,3 +2,16 @@
     margin: 0;
     padding: 0;
 }
+
+header{
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    background-color:#15222BD9;
+}
+
+.logo_uni{
+    width: 255px;
+    height: auto;
+    margin-left: 20px;
+}
