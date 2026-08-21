@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Usuario
+from django.contrib.auth.models import Group
 
 # formulario de registro
 
@@ -14,12 +15,12 @@ class RegistroForm(UserCreationForm):
         # Aplicar clases de Bootstrap a todos los campos
         for name, field in self.fields.items():
             if name == 'cargo':
-                field.widget.attrs['class'] = 'form-select'
+                field.widget.attrs['class'] = 'form-select form-select-md'
             else:
-                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['class'] = 'form-control form-control-md'
             
             # Placeholders opcionales
-            field.widget.attrs['placeholder'] = f' {field.label.lower()}'
+            field.widget.attrs['placeholder'] = f' {field.label.upper()}'
 
     # funcion para asignar el grupo al usuario registrado
     def save(self, commit=True):
