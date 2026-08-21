@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import Group
 from .forms import CustomLoginForm, RegistroForm
+from django.contrib import messages
 
 # Create your views here.
 
@@ -22,10 +23,8 @@ def register_view(request):
         form = RegistroForm(request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'LoginRegister/register.html', {
-                'form': RegistroForm(),
-                'registro_exitoso': True,
-            })
+            messages.success(request, 'Registrado correctamente. Ya puedes iniciar sesión.')
+            return redirect('login')
     else:
         form = RegistroForm()
 
