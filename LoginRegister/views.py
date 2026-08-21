@@ -1,9 +1,22 @@
 from django.shortcuts import render
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import Group
-from .forms import RegistroForm, CustomLoginForm
+from .forms import CustomLoginForm
 
 # Create your views here.
+
+def login_view(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(data=request.POST)
+        if form.is_valid():
+            # ... tu lógica de inicio de sesión
+            pass
+    else:
+        form = CustomLoginForm() # Usa la clase con los atributos de Bootstrap
+        
+    return render(request, 'LoginRegister/login.html', {'form': form})
+
+
 def register_view(request):
     if request.method == 'POST':
         # Aquí puedes manejar el registro del usuario

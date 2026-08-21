@@ -13,15 +13,7 @@
     <img src="{% static 'base/img/logo_univ_uptag.png' %}" alt="Logo de la uni" class="logo_uni">
 </header>
 
-<section class=" form_login">
-    <h4>Inicia Sesión</h4>
-    <img src="{% static 'base/img/gente.png' %}" alt="">
-    
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>    
+{% block content %}{% endblock %}
 
-</section>
 </body>
 </html>

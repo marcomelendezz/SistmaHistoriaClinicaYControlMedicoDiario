@@ -23,3 +23,9 @@ header{
     justify-content: center;
     height: auto;
 }
+
+.logo_login{
+    width: 10px;
+    height: auto;
+    margin-bottom: 20px;
+}
