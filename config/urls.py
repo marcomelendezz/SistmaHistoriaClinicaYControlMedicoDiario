@@ -21,6 +21,6 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('LoginRegister.urls')),
-    path('logout/', include('LoginRegister.urls')),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('dashboard/', include('dashboard.urls')),
 ]
