@@ -22,7 +22,7 @@ class CustomUserManager(BaseUserManager):
 
 class Usuario(AbstractUser):
     CARGOS = (
-        ('medico', 'Médico'),
+        ('medico', 'Medico'),
         ('enfermero', 'Enfermero/a'),
     )
 

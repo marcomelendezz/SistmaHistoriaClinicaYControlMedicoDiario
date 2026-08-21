@@ -7,8 +7,7 @@ from .models import Usuario
 class RegistroForm(UserCreationForm):
     class Meta:
         model = Usuario
-        fields = ['nombre', 'apellido', 'email', 'cargo', 'password1', 'password2']
-
+        fields = ['nombre', 'apellido', 'email', 'cargo']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
@@ -20,7 +19,25 @@ class RegistroForm(UserCreationForm):
                 field.widget.attrs['class'] = 'form-control'
             
             # Placeholders opcionales
-            field.widget.attrs['placeholder'] = f'Ingrese {field.label.lower()}'
+            field.widget.attrs['placeholder'] = f' {field.label.lower()}'
+
+    # funcion para asignar el grupo al usuario registrado
+    def save(self, commit=True):
+        user = super().save(commit=commit)       
+        cargo_seleccionado = self.cleaned_data.get('cargo')
+
+        if user and cargo_seleccionado:
+            # Si 'cargo' es una relación ForeignKey a Group o retorna texto, convertimos a string
+            nombre_grupo = str(cargo_seleccionado)
+            
+            try:
+                # 3. Asignamos el grupo que coincide con el nombre del cargo
+                grupo = Group.objects.get(name=nombre_grupo)
+                user.groups.add(grupo)
+            except Group.DoesNotExist:
+                pass  # Si el grupo no está creado en el Admin aún, ignora el error
+
+        return user
 
 # formulario de inicio de sesión
 
