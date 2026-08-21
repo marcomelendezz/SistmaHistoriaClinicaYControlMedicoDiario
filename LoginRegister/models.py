@@ -22,8 +22,8 @@ class CustomUserManager(BaseUserManager):
 
 class Usuario(AbstractUser):
     CARGOS = (
-        ('medico', 'Medico'),
-        ('enfermero', 'Enfermero/a'),
+        ('Medico', 'medico'),
+        ('Enfermero/a','enfermero'),
     )
 
     username = None
