@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 class Estudiante(models.Model):
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
+    cedula = models.CharField(max_length=20, null=False, blank=True, unique=True)
     edad = models.IntegerField()
     edo_civil = models.CharField(max_length=50)
     sexo = models.CharField(max_length=10)
