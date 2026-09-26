@@ -1,6 +1,79 @@
 {% extends "base/header_navbar.html" %}
 {% load static %}
+
 {% block title %}Registro de Historia Clínica{% endblock %}
 
 {% block content %}
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="mb-3">Registro de Historia Clínica</h1>
+                <hr>
+            </div>
+        </div>
+
+        <form>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre completo</label>
+                    <input type="text" class="form-control" id="nombre" placeholder="">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="cedula" class="form-label">Cédula</label>
+                    <input type="text" class="form-control" id="cedula" placeholder="">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="edad" class="form-label">Edad</label>
+                    <input type="number" class="form-control" id="edad" placeholder="">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="sexo" class="form-label">Sexo</label>
+                    <select class="form-select" id="sexo">
+                        <option selected>Seleccione...</option>
+                        <option>Masculino</option>
+                        <option>Femenino</option>
+                        <option>Otro</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input type="date" class="form-control" id="fecha">
+                </div>
+
+                <div class="col-md-12">
+                    <label for="motivo" class="form-label">Motivo de consulta</label>
+                    <textarea class="form-control" id="motivo" rows="3" placeholder=""></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="antecedentes" class="form-label">Antecedentes</label>
+                    <textarea class="form-control" id="antecedentes" rows="4" placeholder=""></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="exploracion" class="form-label">Exploración física</label>
+                    <textarea class="form-control" id="exploracion" rows="4" placeholder=""></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="diagnostico" class="form-label">Diagnóstico</label>
+                    <textarea class="form-control" id="diagnostico" rows="3" placeholder=""></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="tratamiento" class="form-label">Tratamiento</label>
+                    <textarea class="form-control" id="tratamiento" rows="4" placeholder=""></textarea>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end gap-2 mt-4">
+                    <button type="reset" class="btn btn-outline-secondary">Limpiar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}
