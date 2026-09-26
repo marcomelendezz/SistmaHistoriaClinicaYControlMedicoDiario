@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'base',
     'LoginRegister',
     'dashboard',
+    'Hisotria_clinica',
 ]
 
 MIDDLEWARE = [

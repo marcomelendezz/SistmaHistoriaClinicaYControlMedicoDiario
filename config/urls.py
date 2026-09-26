@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('LoginRegister.urls')),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('dashboard/', include('dashboard.urls')),
+    path('historia/', include('Hisotria_clinica.urls')),
 ]
