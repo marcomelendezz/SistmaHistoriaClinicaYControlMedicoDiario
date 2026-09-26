@@ -1,6 +1,24 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from .forms import EstudianteForm, HistoriaClinicaForm
 
-# Create your views here.
 
 def registro_historia_view(request):
-    return render(request, 'historia/historia.html')
+    estudiante_form = EstudianteForm(request.POST or None)
+    historia_form = HistoriaClinicaForm(request.POST or None)
+
+    if request.method == 'POST':
+        if estudiante_form.is_valid() and historia_form.is_valid():
+            estudiante = estudiante_form.save()
+            historia = historia_form.save(commit=False)
+            historia.estudiante = estudiante
+            historia.save()
+            return redirect('registro_historia')
+
+    return render(
+        request,
+        'historia/historia.html',
+        {
+            'estudiante_form': estudiante_form,
+            'historia_form': historia_form,
+        }
+    )

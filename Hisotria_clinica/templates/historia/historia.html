@@ -12,67 +12,42 @@
             </div>
         </div>
 
-        <form>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label for="nombre" class="form-label">Nombre completo</label>
-                    <input type="text" class="form-control" id="nombre" placeholder="">
-                </div>
+        <form method="post" novalidate>
+            {% csrf_token %}
 
-                <div class="col-md-6">
-                    <label for="cedula" class="form-label">Cédula</label>
-                    <input type="text" class="form-control" id="cedula" placeholder="">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="h5 mb-3">Datos del estudiante</h3>
+                    <div class="row g-3">
+                        {% for field in estudiante_form %}
+                            <div class="col-md-{% if field.name == 'direccion' or field.name == 'contacto_emergencia' %}6{% else %}4{% endif %}">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field.errors }}
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
+            </div>
 
-                <div class="col-md-4">
-                    <label for="edad" class="form-label">Edad</label>
-                    <input type="number" class="form-control" id="edad" placeholder="">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="h5 mb-3">Datos de la historia clínica</h3>
+                    <div class="row g-3">
+                        {% for field in historia_form %}
+                            <div class="col-md-{% if field.name == 'motivo_consulta' or field.name == 'diagnostico' or field.name == 'tratamiento' or field.name == 'observaciones' %}12{% else %}4{% endif %}">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field.errors }}
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
+            </div>
 
-                <div class="col-md-4">
-                    <label for="sexo" class="form-label">Sexo</label>
-                    <select class="form-select" id="sexo">
-                        <option selected>Seleccione...</option>
-                        <option>Masculino</option>
-                        <option>Femenino</option>
-                        <option>Otro</option>
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <label for="fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="fecha">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="motivo" class="form-label">Motivo de consulta</label>
-                    <textarea class="form-control" id="motivo" rows="3" placeholder=""></textarea>
-                </div>
-
-                <div class="col-md-12">
-                    <label for="antecedentes" class="form-label">Antecedentes</label>
-                    <textarea class="form-control" id="antecedentes" rows="4" placeholder=""></textarea>
-                </div>
-
-                <div class="col-md-12">
-                    <label for="exploracion" class="form-label">Exploración física</label>
-                    <textarea class="form-control" id="exploracion" rows="4" placeholder=""></textarea>
-                </div>
-
-                <div class="col-md-12">
-                    <label for="diagnostico" class="form-label">Diagnóstico</label>
-                    <textarea class="form-control" id="diagnostico" rows="3" placeholder=""></textarea>
-                </div>
-
-                <div class="col-md-12">
-                    <label for="tratamiento" class="form-label">Tratamiento</label>
-                    <textarea class="form-control" id="tratamiento" rows="4" placeholder=""></textarea>
-                </div>
-
-                <div class="col-12 d-flex justify-content-end gap-2 mt-4">
-                    <button type="reset" class="btn btn-outline-secondary">Limpiar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
+            <div class="col-12 d-flex justify-content-end gap-2 mt-4">
+                <button type="reset" class="btn btn-outline-secondary">Limpiar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
         </form>
     </div>
