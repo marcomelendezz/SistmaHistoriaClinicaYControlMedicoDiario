@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from .forms import EstudianteForm, HistoriaClinicaForm
 
 
-def registro_historia_view(request):
+def registro_historia_view(request): 
     estudiante_form = EstudianteForm(request.POST or None)
     historia_form = HistoriaClinicaForm(request.POST or None)
 
@@ -22,3 +22,6 @@ def registro_historia_view(request):
             'historia_form': historia_form,
         }
     )
+
+def lista_historia_view(request):
+    return render(request, 'historia/lista_historia.html',)
