@@ -1,0 +1,70 @@
+{% extends "base/header_navbar.html" %}
+{% load static %}
+
+{% block title %}Nueva Consulta{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Nueva consulta</h1>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white">
+                    <strong>Buscar estudiante</strong>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="mb-3">
+                        <label class="form-label">Buscar por nombre, apellido o cédula</label>
+                        <div class="input-group">
+                            <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Ej. Juan, Pérez, 123456">
+                            <button class="btn btn-outline-dark" type="submit">Buscar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white">
+                    <strong>Historia clínica</strong>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="estudiante" class="form-label">Seleccionar estudiante</label>
+                            <select name="estudiante" id="estudiante" class="form-select" required>
+                                <option value="">Seleccione un estudiante</option>
+                                {% for estudiante in estudiantes %}
+                                    <option value="{{ estudiante.id }}" {% if selected_estudiante and selected_estudiante.id == estudiante.id %}selected{% endif %}>
+                                        {{ estudiante.nombre }} {{ estudiante.apellido }} - {{ estudiante.cedula }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        {% for field in historia_form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">Guardar consulta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
