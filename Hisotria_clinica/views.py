@@ -68,5 +68,43 @@ def nueva_consulta_view(request):
 
 
 def lista_historia_view(request):
-    historias = HistoriaClinica.objects.select_related('estudiante').all().order_by('-fecha_consulta')
-    return render(request, 'historia/lista_historia.html', {'historias': historias})
+    query = request.GET.get('q', '').strip()
+    estudiantes = Estudiante.objects.all().order_by('apellido', 'nombre')
+    selected_estudiante = None
+    estudiante_id = request.GET.get('estudiante')
+
+    if estudiante_id:
+        selected_estudiante = get_object_or_404(Estudiante, pk=estudiante_id)
+    elif query:
+        estudiantes_por_cedula = Estudiante.objects.filter(cedula__icontains=query)
+
+        if estudiantes_por_cedula.count() == 1:
+            selected_estudiante = estudiantes_por_cedula.first()
+        else:
+            estudiantes = estudiantes.filter(
+                Q(nombre__icontains=query) |
+                Q(apellido__icontains=query) |
+                Q(cedula__icontains=query)
+            )
+
+    if not selected_estudiante and query and not estudiante_id:
+        estudiantes = estudiantes.filter(
+            Q(nombre__icontains=query) |
+            Q(apellido__icontains=query) |
+            Q(cedula__icontains=query)
+        )
+
+    historias = []
+    if selected_estudiante:
+        historias = HistoriaClinica.objects.filter(estudiante=selected_estudiante).select_related('estudiante').order_by('-fecha_consulta')
+
+    return render(
+        request,
+        'historia/lista_historia.html',
+        {
+            'historias': historias,
+            'estudiantes': estudiantes,
+            'selected_estudiante': selected_estudiante,
+            'query': query,
+        }
+    )

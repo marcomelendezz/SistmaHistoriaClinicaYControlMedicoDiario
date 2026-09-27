@@ -4,43 +4,75 @@
 {% block title %}Lista de Historias Clínicas{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="mb-3">Lista de Historias Clínicas</h1>
-            <hr>
-        </div>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Historias clínicas</h1>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        
-                        <th>Nombre del Estudiante</th>
-                        <th>Fecha de Consulta</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for historia in historias %}
-                    <tr>
-                        <td>{{ historia.estudiante.nombre }} {{ historia.estudiante.apellido }}</td>
-                        <td>{{ historia.fecha_consulta }}</td>
-                        <td>
-                            <a href="#" class="btn btn-info btn-sm">Ver</a>
-                            <a href="#" class="btn btn-warning btn-sm">Agregar consulta</a>
-                            <a href="#" class="btn btn-danger btn-sm">Eliminar</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4" class="text-center">No hay historias clínicas registradas.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="mb-4">
+        <form method="get" class="d-flex gap-2 align-items-center">
+            <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Buscar estudiante por nombre, apellido o cédula">
+            <button class="btn btn-dark" type="submit">Buscar</button>
+        </form>
     </div>
+
+    {% if query and not selected_estudiante %}
+        {% if estudiantes %}
+            <div class="mb-4">
+                <h5 class="mb-3">Resultados</h5>
+                <div class="list-group">
+                    {% for estudiante in estudiantes %}
+                        <a href="?q={{ query }}&estudiante={{ estudiante.id }}" class="list-group-item list-group-item-action">
+                            <strong>{{ estudiante.nombre }} {{ estudiante.apellido }}</strong>
+                            <span class="text-muted d-block">Cédula: {{ estudiante.cedula }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning">No se encontraron estudiantes con ese criterio.</div>
+        {% endif %}
+    {% endif %}
+
+    {% if selected_estudiante %}
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <strong>Historial clínico de {{ selected_estudiante.nombre }} {{ selected_estudiante.apellido }}</strong>
+            </div>
+            <div class="card-body">
+                {% if historias %}
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Motivo</th>
+                                    <th>Diagnóstico</th>
+                                    <th>Tratamiento</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for historia in historias %}
+                                <tr>
+                                    <td>{{ historia.fecha_consulta }}</td>
+                                    <td>{{ historia.motivo_consulta|truncatechars:40 }}</td>
+                                    <td>{{ historia.diagnostico|truncatechars:50 }}</td>
+                                    <td>{{ historia.tratamiento|truncatechars:50 }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-info btn-sm">Ver</a>
+                                        <a href="#" class="btn btn-danger btn-sm">Eliminar</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">Este estudiante aún no tiene historias clínicas registradas.</div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
