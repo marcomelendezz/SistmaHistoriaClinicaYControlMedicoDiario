@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from .forms import EstudianteForm, HistoriaClinicaForm
+from .models import HistoriaClinica
 
 
 def registro_historia_view(request): 
@@ -23,5 +24,7 @@ def registro_historia_view(request):
         }
     )
 
+
 def lista_historia_view(request):
-    return render(request, 'historia/lista_historia.html',)
+    historias = HistoriaClinica.objects.select_related('estudiante').all().order_by('-fecha_consulta')
+    return render(request, 'historia/lista_historia.html', {'historias': historias})
