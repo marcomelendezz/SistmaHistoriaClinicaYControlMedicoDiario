@@ -17,7 +17,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Nombre del Estudiante</th>
                         <th>Fecha de Consulta</th>
                         <th>Acciones</th>
@@ -26,7 +26,6 @@
                 <tbody>
                     {% for historia in historias %}
                     <tr>
-                        <td>{{ historia.id }}</td>
                         <td>{{ historia.estudiante.nombre }} {{ historia.estudiante.apellido }}</td>
                         <td>{{ historia.fecha_consulta }}</td>
                         <td>
