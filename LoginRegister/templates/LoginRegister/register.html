@@ -27,8 +27,8 @@
             <div class="mb-3">
                 {{ field }}
                 {% if field.errors %}
-                    <div class="text-danger small mt-1">
-                        {{ field.errors|striptags }}
+                    <div class="alert alert-danger py-2 small mt-1" role="alert">
+                        {{ field.errors|striptags}}
                     </div>
                 {% endif %}
             </div>

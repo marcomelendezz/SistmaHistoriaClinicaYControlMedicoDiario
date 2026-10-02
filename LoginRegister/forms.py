@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.core.validators import MinLengthValidator
 from .models import Usuario
 from django.contrib.auth.models import Group
 
@@ -14,7 +15,14 @@ class RegistroForm(UserCreationForm):
         fields = ['nombre', 'apellido', 'email', 'cargo']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
+        self.fields['password1'].min_length = 16
+        self.fields['password1'].validators.append(MinLengthValidator(
+            16,
+            message='La contraseña es muy corta; debe tener al menos 16 caracteres.',
+        ))
+        self.fields['password1'].widget.attrs['minlength'] = 16
+
         # Aplicar clases de Bootstrap a todos los campos
         for name, field in self.fields.items():
             if name == 'cargo':
@@ -24,6 +32,13 @@ class RegistroForm(UserCreationForm):
             
             # Placeholders opcionales
             field.widget.attrs['placeholder'] = f' {field.label.upper()}'
+
+    def clean_password2(self):
+        password1 = self.data.get(self.add_prefix('password1'), '').strip()
+        password2 = self.cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError('Las contraseñas no coinciden.')
+        return password2
 
     # funcion para asignar el grupo al usuario registrado
     def save(self, commit=True):
@@ -55,4 +70,5 @@ class CustomLoginForm(AuthenticationForm):
         self.fields['password'].widget.attrs.update({
             'class': 'form-control form-control-md',
             'placeholder': 'CONTRASEÑA'
+            
         })
