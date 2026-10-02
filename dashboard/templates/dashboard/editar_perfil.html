@@ -1,0 +1,14 @@
+{% extends "base/header_navbar.html" %}
+{% block title %}Editar perfil{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="h3 mb-4">Editar perfil</h1>
+    <form method="post" class="border rounded p-4 bg-white">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="{% url 'mi_perfil' %}" class="btn btn-outline-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

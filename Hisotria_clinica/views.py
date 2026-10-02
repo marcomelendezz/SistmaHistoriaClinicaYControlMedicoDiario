@@ -2,8 +2,9 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import EstudianteForm, HistoriaClinicaForm
 from .models import Estudiante, HistoriaClinica
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def registro_historia_view(request): 
     estudiante_form = EstudianteForm(request.POST or None)
     historia_form = HistoriaClinicaForm(request.POST or None)
@@ -25,7 +26,7 @@ def registro_historia_view(request):
         }
     )
 
-
+@login_required
 def nueva_consulta_view(request):
     query = request.GET.get('q', '').strip()
     estudiantes = Estudiante.objects.all().order_by('apellido', 'nombre')
@@ -66,7 +67,7 @@ def nueva_consulta_view(request):
         }
     )
 
-
+@login_required
 def lista_historia_view(request):
     query = request.GET.get('q', '').strip()
     estudiantes = Estudiante.objects.all().order_by('apellido', 'nombre')
