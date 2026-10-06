@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'LoginRegister',
     'dashboard',
     'Hisotria_clinica',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -100,6 +102,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    # AxesStandaloneBackend debe ir primero
+    'axes.backends.AxesStandaloneBackend',
+
+    # Backend por defecto de Django (necesario para la autenticación normal)
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 
