@@ -112,6 +112,11 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+import datatime
+
+AXES_FAILURE_LIMIT = 3
+AXES_LOCKOUT_PARAMETERS = ['username', 'ip_address']
+AXES_RESET_ON_SUCCESS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
