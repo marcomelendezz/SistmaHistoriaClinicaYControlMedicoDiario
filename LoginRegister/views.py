@@ -3,6 +3,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import Group
 from .forms import CustomLoginForm, RegistroForm
 from django.contrib import messages
+from django.contrib.auth.views import PasswordResetConfirmView
+from axes.helpers import reset_user_lockout
 
 # Create your views here.
 
@@ -32,3 +34,18 @@ def register_view(request):
 
 def blocked_view(request):
     return render(request, 'LoginRegister/accounts/bloqueo.html')
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'accounts/password_reset_confirm.html'
+    
+    def form_valid(self, form):
+        # 1. Guarda la nueva contraseña usando el comportamiento normal de Django
+        response = super().form_valid(form)
+        
+        # 2. Obtiene el usuario que acaba de cambiar la contraseña
+        user = form.user
+        
+        # 3. Desbloquea al usuario en django-axes usando su nombre de usuario
+        reset_user_lockout(request=self.request, username=user.username)
+        
+        return response
