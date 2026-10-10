@@ -116,6 +116,7 @@ import datetime
 
 AXES_FAILURE_LIMIT = 3
 AXES_LOCKOUT_PARAMETERS = ['username', 'ip_address']
+AXES_LOCKOUT_URL = '/bloqueo/'
 AXES_RESET_ON_SUCCESS = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

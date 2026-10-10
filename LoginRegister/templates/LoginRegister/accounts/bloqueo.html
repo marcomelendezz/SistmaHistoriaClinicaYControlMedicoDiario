@@ -9,11 +9,11 @@
         <h4 class="text-center" style="color: #F18000;">Cuenta Bloqueada</h4>
         <div>
             <p class="text-center">
-                Su cuenta ha sido bloqueada por favor cambie su contraseña.
+                Su cuenta ha sido bloqueada. Solicita un enlace para cambiar tu contraseña.
             </p>
-            <button type="button" class="btn btn-success d-block mx-auto" ">
-                Cambiar Contraseña
-            </button>
+            <a href="{% url 'password_reset' %}" class="btn btn-success d-block mx-auto">
+                Recuperar Contraseña
+            </a>
         </div>
     </div>
     </div>
