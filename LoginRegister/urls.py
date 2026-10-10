@@ -11,4 +11,5 @@ urlpatterns = [
         authentication_form=CustomLoginForm,
     ), name='login'),
     path('registro/',views.register_view, name='register'),
+    path('bloqueo/', views.blocked_view, name='blocked'),
 ]

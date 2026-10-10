@@ -105,14 +105,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    # AxesStandaloneBackend debe ir primero
+
     'axes.backends.AxesStandaloneBackend',
 
     # Backend por defecto de Django (necesario para la autenticación normal)
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-import datatime
+import datetime
 
 AXES_FAILURE_LIMIT = 3
 AXES_LOCKOUT_PARAMETERS = ['username', 'ip_address']

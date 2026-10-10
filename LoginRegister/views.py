@@ -29,3 +29,6 @@ def register_view(request):
         form = RegistroForm()
 
     return render(request, 'LoginRegister/register.html', {'form': form})
+
+def blocked_view(request):
+    return render(request, 'LoginRegister/accounts/bloqueo.html')
