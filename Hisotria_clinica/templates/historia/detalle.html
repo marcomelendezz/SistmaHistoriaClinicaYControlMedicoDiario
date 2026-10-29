@@ -1,0 +1,19 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Consulta clínica{% endblock %}
+{% block content %}<h1>Consulta clínica</h1>
+<p>{{ historia.estudiante }} · {{ historia.fecha_consulta }} · Cédula: {{ historia.estudiante.cedula }}</p>
+<p>Médico responsable: {{ historia.medico|default:'Sin registrar en la consulta histórica' }}</p>
+{% if access.export_clinical %}<div class="report-actions"><a class="btn btn-success" target="_blank" rel="noopener" href="{% url 'historia_pdf' historia.pk %}">Visualizar FOR-SSS-04</a><a class="btn btn-outline-success" href="{% url 'historia_pdf' historia.pk %}?download=1">Descargar PDF</a><a class="btn btn-outline-success" target="_blank" rel="noopener" href="{% url 'imprimir_historia' historia.pk %}">Imprimir</a></div><p class="form-text">Una hoja por consulta. La emisión exige datos completos y espacio suficiente, sin recortar contenido.</p>{% endif %}
+{% if access.write_clinical %}<a class="btn btn-outline-success mb-3" href="{% url 'corregir_historia' historia.pk %}">Corregir con motivo</a>{% endif %}
+<dl><dt>Motivo</dt><dd>{{ historia.motivo_consulta|linebreaksbr }}</dd>
+<dt>Enfermedad actual</dt><dd>{{ historia.enfermedad_actual|default:'Sin registrar'|linebreaksbr }}</dd>
+<dt>Diagnóstico provisional</dt><dd>{{ historia.diagnostico_provisional|default:'Sin registrar'|linebreaksbr }}</dd>
+<dt>Diagnóstico</dt><dd>{{ historia.diagnostico|linebreaksbr }}</dd>
+<dt>Tratamiento</dt><dd>{{ historia.tratamiento|linebreaksbr }}</dd>
+<dt>Observaciones</dt><dd>{{ historia.observaciones|default:'Sin observaciones'|linebreaksbr }}</dd></dl>
+{% for title, options in historia.daily_option_groups %}<section class="clinical-options"><h2>{{ title }}</h2><dl class="option-readonly">{% for option in options %}<div><dt>{{ option.label }}</dt><dd>{% if option.value is None %}Sin información registrada{% elif option.value %}X{% else %}No seleccionada{% endif %}</dd></div>{% endfor %}</dl></section>{% endfor %}
+<a href="{% url 'detalle_paciente' historia.estudiante_id %}">Volver al expediente</a>
+{% if access.export_clinical %}<section><h2>Constancias de reposo</h2>
+{% if access.manage_reposo and historia.medico_id == user.pk %}<a class="btn btn-outline-success" href="{% url 'nuevo_reposo' historia.pk %}">Preparar constancia FOR-SSS-07</a>{% endif %}
+<ul>{% for reposo in reposos %}<li><a href="{% url 'detalle_reposo' reposo.pk %}">Versión {{ reposo.numero_version }} · {{ reposo.get_estado_display }}</a>{% if reposo.aprobado_en %} · {{ reposo.aprobado_en }}{% endif %}</li>{% empty %}<li>No hay constancias disponibles.</li>{% endfor %}</ul></section>{% endif %}
+<details class="mt-3"><summary>Auditoría clínica</summary>{% for change in changes %}<article class="audit-event"><p>{{ change.fecha }} · {{ change.usuario }} · {{ change.motivo }}</p><p>Antes: {{ change.anteriores }}</p><p>Después: {{ change.nuevos }}</p></article>{% empty %}<p>No hay modificaciones registradas desde la incorporación de la auditoría.</p>{% endfor %}</details>{% endblock %}

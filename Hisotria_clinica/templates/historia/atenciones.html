@@ -1,0 +1,13 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Atenciones{% endblock %}
+{% block content %}<h1>Atenciones</h1><p>Las llegadas pendientes y canceladas no se consideran consultas completadas.</p>
+<form method="get" class="row g-3 mb-4">{% for field in form %}<div class="col-12 col-sm-6 col-xl-3"><label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</div>{% endfor %}<div class="col-12 col-sm-6 col-xl-3 d-flex align-items-end"><button class="btn btn-success w-100">Filtrar</button></div></form>
+<div class="table-responsive"><table class="table table-striped align-middle attention-table"><thead><tr><th>Paciente / cédula</th><th>Llegada</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+{% for attention in attentions %}<tr><td><a href="{% url 'detalle_paciente' attention.paciente_id %}">{{ attention.paciente }}</a><br>{{ attention.paciente.cedula }}</td><td>{{ attention.fecha_hora_llegada }}</td><td>{{ attention.motivo_visita|truncatechars:100 }}</td><td><span class="status status-{{ attention.estado }}">{{ attention.get_estado_display }}</span></td><td>
+{% if access.manage_attention and attention.estado == 'pendiente' %}<form class="d-inline" method="post" action="{% url 'cambiar_estado' attention.pk %}">{% csrf_token %}<input type="hidden" name="target" value="en_atencion"><input type="hidden" name="expected_version" value="{{ attention.version }}"><button class="btn btn-success btn-sm">En atención</button></form>{% endif %}
+{% if access.write_clinical and attention.estado == 'en_atencion' %}<a class="btn btn-success btn-sm" href="{% url 'consulta_medica' attention.pk %}">Redactar historia</a>{% endif %}
+{% if access.manage_attention %}{% if attention.estado == 'pendiente' or attention.estado == 'en_atencion' %}<form class="d-inline" method="post" data-confirm="¿Confirmas cancelar esta atención? Se conservará su registro." action="{% url 'cambiar_estado' attention.pk %}">{% csrf_token %}<input type="hidden" name="target" value="cancelado"><input type="hidden" name="expected_version" value="{{ attention.version }}"><button class="btn btn-outline-secondary btn-sm">Cancelar atención</button></form>{% endif %}{% endif %}
+{% if attention.historia %}<a href="{% url 'detalle_historia' attention.historia.pk %}">Ver consulta</a>{% endif %}
+<details class="mt-2"><summary>Trazabilidad</summary>{% for change in attention.cambios_estado.all %}<p>{{ change.fecha }} · {{ change.usuario }}: {{ change.get_nuevo_display }}</p>{% endfor %}</details>
+</td></tr>{% empty %}<tr><td colspan="5">No hay atenciones para estos filtros.</td></tr>{% endfor %}
+</tbody></table></div>{% endblock %}

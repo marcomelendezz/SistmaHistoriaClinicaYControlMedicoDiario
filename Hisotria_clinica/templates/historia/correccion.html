@@ -1,0 +1,4 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Corregir consulta{% endblock %}
+{% block content %}<h1>Corregir consulta médica</h1><p>{{ historia.estudiante }} · Consulta del {{ historia.fecha_consulta }}</p><p>El motivo es obligatorio. Se conservarán los valores anteriores, el responsable y la fecha del cambio.</p>
+<form method="post" class="clinical-form">{% csrf_token %}{% include 'historia/clinical_fields.html' %}<button class="btn btn-success" type="submit">Guardar corrección con auditoría</button><a class="btn btn-outline-secondary" href="{% url 'detalle_historia' historia.pk %}">Cancelar</a></form>{% endblock %}

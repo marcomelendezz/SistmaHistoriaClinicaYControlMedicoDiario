@@ -1,0 +1,5 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Consulta médica{% endblock %}
+{% block content %}<h1>Consulta médica</h1><p>{{ attention.paciente }} · Cédula: {{ attention.paciente.cedula }} · {{ attention.get_estado_display }}</p>
+<p>Llegada: {{ attention.fecha_hora_llegada }}. Completa los campos obligatorios para finalizar la atención.</p>
+<form method="post" class="clinical-form">{% csrf_token %}{% include 'historia/clinical_fields.html' %}<button class="btn btn-success" type="submit">Guardar consulta y finalizar atención</button><a class="btn btn-outline-secondary" href="{% url 'lista_atenciones' %}">Volver</a></form>{% endblock %}

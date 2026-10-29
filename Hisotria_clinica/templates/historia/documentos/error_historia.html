@@ -1,0 +1,7 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Revisar historia para PDF{% endblock %}
+{% block content %}<h1>No se pudo emitir FOR-SSS-04</h1>
+<div class="report-warning" role="alert"><ul>{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>
+<p>La historia conserva todo su contenido. Revisa los datos del expediente y de la consulta; las correcciones clínicas requieren motivo y quedan auditadas.</p>
+<a class="btn btn-outline-success" href="{% url 'detalle_historia' history_id %}">Volver a la consulta</a>
+<a class="btn btn-outline-success" href="{% url 'corregir_historia' history_id %}">Corregir con motivo</a>{% endblock %}

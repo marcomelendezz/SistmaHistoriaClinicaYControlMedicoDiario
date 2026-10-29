@@ -1,0 +1,7 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Preparar reposo{% endblock %}
+{% block content %}<h1>{% if reposo %}Editar borrador{% elif previous %}Nueva versión de reposo{% else %}Preparar constancia de reposo{% endif %}</h1>
+<p>{{ historia.estudiante }} · Cédula: {{ historia.estudiante.cedula }} · Consulta {{ historia.pk }} · Médico responsable: {{ historia.medico }}</p>
+{% if previous %}<p class="report-notice">La versión {{ previous.numero_version }} se conservará sin cambios. Debes justificar y aprobar esta nueva versión.</p>{% endif %}
+<p>La fecha final se calcula incluyendo el primer día. El período queda registrado; el PDF mantiene los campos de la hoja institucional. La fecha de emisión se completa al aprobar.</p>
+<form method="post" class="clinical-form">{% csrf_token %}{{ form.as_p }}<button class="btn btn-success" type="submit">Guardar borrador para revisión</button><a class="btn btn-outline-success" href="{% url 'detalle_historia' historia.pk %}">Volver a la consulta</a></form>{% endblock %}

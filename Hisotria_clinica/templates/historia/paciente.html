@@ -1,0 +1,11 @@
+{% extends 'base/header_navbar.html' %}
+{% load static %}
+{% block title %}{% if patient %}Editar paciente{% else %}Registrar paciente{% endif %}{% endblock %}
+{% block content %}
+<h1>{% if patient %}Editar datos personales{% else %}Registrar paciente{% endif %}</h1>
+<p>Esta ficha no crea una consulta médica. PNF y cargo son opcionales.</p>
+<form method="post" class="patient-form">{% csrf_token %}{{ form.non_field_errors }}
+<div class="row g-3">{% for field in form %}<div class="col-md-6" {% if field.name == 'pnf' %}data-patient-types="estudiante"{% elif field.name == 'cargo_laboral' %}data-patient-types="profesor obrero_tecnico administrativo"{% endif %}>
+<label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}{% if field.field.required %} *{% endif %}</label>{{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}{{ field.errors }}</div>{% endfor %}</div>
+<button type="submit" class="btn btn-success mt-4">Guardar ficha personal</button><a href="{% url 'lista_pacientes' %}" class="btn btn-outline-secondary mt-4">Volver</a></form>
+<script src="{% static 'base/js/patient-form.js' %}" defer></script>{% endblock %}

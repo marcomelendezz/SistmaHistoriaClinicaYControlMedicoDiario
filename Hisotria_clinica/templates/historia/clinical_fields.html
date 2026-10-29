@@ -1,0 +1,8 @@
+{{ form.non_field_errors }}
+{% for hidden in form.hidden_fields %}{{ hidden }}{{ hidden.errors }}{% endfor %}
+{% for field in form.text_fields %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}{% if field.help_text %}<span class="form-text">{{ field.help_text }}</span>{% endif %}</p>{% endfor %}
+{% for title, fields in form.daily_option_groups %}
+<fieldset class="clinical-options"><legend>{{ title }}</legend>
+<p class="form-text">Opcional. Marca únicamente lo que corresponda. Se conservan las abreviaturas institucionales.</p>
+<div class="option-grid">{% for field in fields %}<div><label for="{{ field.id_for_label }}">{{ field }}<span>{{ field.label }}</span></label>{{ field.errors }}</div>{% endfor %}</div>
+</fieldset>{% endfor %}

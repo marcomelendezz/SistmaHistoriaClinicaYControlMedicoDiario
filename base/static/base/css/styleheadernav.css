@@ -1,61 +1,15 @@
-aside {
-    background-color: #15222BD9;
-}
+*{box-sizing:border-box}body.medical-app{margin:0;color:#20332c;background:#f3f5f4;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:1rem;line-height:1.55}
+.app-header{background:#fff;border-bottom:1px solid #dce4df;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}.institution{display:flex;align-items:center;gap:1.5rem}.institution strong{font-size:1.12rem}.institution span{display:block;color:#56675f;font-size:.88rem}.logo_uni{width:190px;max-width:100%;height:auto;display:block}.app-layout{display:flex;min-height:calc(100vh - 160px)}.app-sidebar{width:250px;flex:0 0 250px;background:#164d3b;color:#fff;padding:1.5rem 1rem;display:flex;flex-direction:column}.nav-caption{font-size:.75rem;letter-spacing:.12em;color:#d5e9de;margin:0 .75rem 1rem}.app-sidebar nav a,.app-sidebar nav button{display:flex;align-items:center;gap:.75rem;width:100%;padding:.8rem .75rem;border:0;border-radius:.4rem;background:transparent;text-decoration:none;color:#fff;font:inherit;text-align:left;cursor:pointer}.app-sidebar nav a:hover,.app-sidebar nav button:hover,.app-sidebar nav a:focus-visible,.app-sidebar nav button:focus-visible{background:#28634e;outline:2px solid #acd6bd;outline-offset:-2px}.nav-icon{width:20px;height:20px;flex:0 0 20px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}.icon-sprite{position:absolute;width:0;height:0;overflow:hidden}.session-info{margin-top:auto;padding:2rem .75rem .5rem;font-size:.9rem;overflow-wrap:anywhere}.session-info span{color:#d5e9de}.contenido-principal{flex:1;min-width:0;max-width:1600px;padding:2rem 2.5rem}.contenido-principal h1{font-size:1.9rem;margin:0 0 .75rem;line-height:1.25}.contenido-principal h2{font-size:1.25rem;margin:1.7rem 0 .9rem}.contenido-principal a{color:#1a5941}.contenido-principal .btn-success{color:#fff;background:#1b6147;border-color:#1b6147}.contenido-principal .btn-outline-success{color:#1b6147;border-color:#1b6147}.contenido-principal .btn-success:hover{background:#124732}.contenido-principal p{overflow-wrap:anywhere}.patient-form,.clinical-form,.card{background:#fff;border:1px solid #dce4df;border-radius:.6rem;padding:1.5rem;max-width:1000px}.clinical-form{max-width:900px}label{font-weight:600}input,select,textarea{max-width:100%;font:inherit}textarea{width:100%}.form-control,.form-select{width:100%;min-height:44px;border:1px solid #8c9f93;border-radius:.35rem;padding:.5rem .7rem;background:#fff;color:#20332c}input:disabled{background:#eef1ef;color:#52635a}.errorlist{color:#a22020;margin:.4rem 0;padding-left:1.2rem}.form-text{color:#596b61;font-size:.85rem}.btn{display:inline-block;min-height:40px;padding:.45rem .8rem;border:1px solid #81958a;border-radius:.35rem;text-decoration:none;font:inherit;cursor:pointer}.btn-sm{font-size:.85rem;min-height:34px;margin:.15rem 0}.table-responsive{width:100%;overflow-x:auto;background:#fff;border:1px solid #dce4df;border-radius:.5rem}.table{width:100%;border-collapse:collapse;margin:0;min-width:540px}.table th,.table td{padding:.85rem 1rem;text-align:left;vertical-align:top;border-bottom:1px solid #e3e9e5}.table th{background:#eaf1ed;font-size:.9rem;color:#244c39}.table-striped tbody tr:nth-child(even){background:#f8faf9}.status{display:inline-block;border-radius:1rem;font-size:.8rem;font-weight:600;padding:.25rem .65rem;white-space:nowrap}.status-pendiente{background:#fff0c2;color:#674700}.status-en_atencion{background:#e2edf9;color:#16426f}.status-atendido{background:#ddf0e2;color:#155330}.status-cancelado{background:#e8eae9;color:#3e4942}.audit-event{padding:1rem;margin:.5rem 0;background:#fff;border-left:3px solid #799f88;overflow-wrap:anywhere}summary{cursor:pointer;font-weight:600}dl dd{white-space:normal;overflow-wrap:anywhere;margin-bottom:1rem}.app-footer{text-align:center;padding:1rem;font-size:.8rem;color:#5d6e64;background:#fff;border-top:1px solid #dce4df}.menu-toggle{display:none;border:1px solid #1b6147;color:#164d3b;border-radius:.35rem;padding:.5rem .8rem;background:#fff;font:inherit}.skip-link{position:absolute;left:-9999px}.skip-link:focus{left:1rem;top:1rem;background:#fff;z-index:10;padding:1rem}.metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.5rem 0}.metric{background:#fff;border:1px solid #dce4df;border-radius:.5rem;padding:1.2rem}.metric strong{display:block;color:#19523a;font-size:2rem}.metric span{color:#56675f}
+@media(max-width:1000px){.contenido-principal{padding:1.5rem}.app-sidebar{width:220px;flex-basis:220px}.institution{gap:1rem}.logo_uni{width:165px}}
+@media(max-width:767px){.app-header{padding:.9rem 1rem}.institution{gap:.7rem}.institution strong{font-size:.95rem}.institution span{font-size:.75rem}.logo_uni{width:125px}.app-layout{display:block}.app-sidebar{width:100%;min-height:0;padding:1rem}.session-info{padding:.75rem}.contenido-principal{padding:1.25rem 1rem}.contenido-principal h1{font-size:1.55rem}.js .menu-toggle{display:block}.js .app-sidebar:not(.is-open){display:none}.metric-grid{grid-template-columns:1fr}.patient-form,.clinical-form{padding:1rem}.table th,.table td{padding:.7rem}.app-footer{font-size:.75rem}}
 
-aside .nav-pills .nav-item {
-    width: 100%;
-}
+/* The original institutional asset uses white lettering; preserve its contrast. */
+.logo_uni{background:#164d3b;padding:.45rem;border-radius:.25rem;flex-shrink:0}.institution,.institution>div{min-width:0}
 
-aside .dropdown-toggle::after {
-    margin-left: 0.5rem;
-    color: #ffffff;
-}
+.attention-table{min-width:860px}.attention-table td:nth-child(1){min-width:160px}.attention-table td:nth-child(2){min-width:150px}.attention-table td:nth-child(3){min-width:180px}.attention-table td:nth-child(5){min-width:190px}
 
-aside .dropdown-menu {
-    position: static;
-    margin-top: 0.25rem;
-    background-color: rgba(21, 34, 43, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 0.5rem;
-    box-shadow: none;
-    padding: 0.35rem 0;
-    min-width: 100%;
-    max-width: 100%;
-    width: 100%;
-    overflow: hidden;
-}
+.medical-app form.border{max-width:900px;background:#fff}.medical-app form input:not([type="hidden"]),.medical-app form select,.medical-app form textarea{width:100%;min-height:44px;border:1px solid #8c9f93;border-radius:.35rem;padding:.5rem .7rem;background:#fff;color:#20332c}
 
-aside .dropdown-item {
-    color: #ffffff;
-    background-color: transparent;
-    padding: 0.65rem 1rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    white-space: normal;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    line-height: 1.4;
-}
-
-aside .dropdown-item:hover,
-aside .dropdown-item:focus {
-    background-color: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
-}
-
-aside .dropdown-item.active,
-aside .dropdown-item:active {
-    background-color: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-}
-
-.contenido-principal {
-    padding: 2rem;
-    background-color: #f8f9fa;
-    min-height: calc(100vh - 120px);
-}
-
-.logo_uni {
-    display: block;
-    max-width: 220px;
-    height: auto;
-}
+.report-filters,.report-summary,.report-notice{background:#fff;border:1px solid #dce4df;border-radius:.5rem;padding:1rem;margin:1rem 0}.report-summary strong{font-size:1.4rem;color:#19523a}.report-notice{border-left:4px solid #648574}.daily-section{margin:2rem 0;border-top:2px solid #c5d8cb;padding-top:.3rem}.report-count{font-size:.85rem;font-weight:400;margin-left:.75rem}.report-team{margin:1rem 0 1.5rem}.team-header{display:flex;flex-wrap:wrap;gap:.25rem 1.5rem;padding:1rem;background:#eaf1ed;border:1px solid #dce4df;border-radius:.5rem .5rem 0 0}.team-header p{margin:0}.report-table{min-width:1000px}.report-table td{max-width:320px;overflow-wrap:anywhere}.report-diagnosis{white-space:normal;min-width:230px}.daily-total{padding:.75rem 1rem;background:#eaf1ed}.report-warning{border-left:4px solid #987128;background:#fff8e7;padding:1rem;margin:1.25rem 0;border-radius:.3rem}.report-warning h2{margin-top:0}.empty-report{background:#fff;padding:1rem;border:1px solid #dce4df}.report-warning li{overflow-wrap:anywhere;margin-bottom:.5rem}
+.report-table td{overflow-wrap:break-word}.report-table td:nth-child(5){white-space:nowrap}.report-table td.report-diagnosis{overflow-wrap:anywhere}
+.clinical-options{border:1px solid #bfd3c6;border-radius:.5rem;padding:1rem;margin:1.5rem 0;background:#f8fbf9}.clinical-options legend{float:none;width:auto;font-size:1.05rem;font-weight:600;padding:0 .4rem}.option-grid{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem}.option-grid label{display:flex;align-items:center;gap:.65rem;min-height:44px;cursor:pointer}.medical-app .clinical-options input[type="checkbox"]{width:1.2rem;height:1.2rem;min-height:0;flex:0 0 1.2rem;accent-color:#1b6147}.option-readonly{display:flex;flex-wrap:wrap;gap:1rem 2rem;margin:0}.option-readonly dd{margin:0}.report-actions{display:flex;flex-wrap:wrap;gap:.7rem;margin:1rem 0}.daily-report-table{min-width:1450px}.pdf-preview{width:100%;height:75vh;border:1px solid #bfd3c6}

@@ -1,0 +1,6 @@
+<form method="get" class="report-filters mb-4">
+<p>Selecciona una fecha o completa Desde y Hasta. Los extremos del rango están incluidos (máximo 366 días).</p>
+{{ form.non_field_errors }}
+<div class="row g-3">{% for field in form %}<div class="col-12 col-sm-6 col-xl-3"><label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>{{ field }}{{ field.errors }}</div>{% endfor %}
+<div class="col-12 col-sm-6 col-xl-3 d-flex align-items-end"><button type="submit" class="btn btn-success w-100">Consultar reporte</button></div></div>
+</form>

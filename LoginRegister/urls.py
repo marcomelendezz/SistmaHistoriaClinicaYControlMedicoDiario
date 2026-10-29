@@ -10,6 +10,9 @@ urlpatterns = [
         authentication_form=CustomLoginForm,
     ), name='login'),
     path('registro/', views.register_view, name='register'),
+    path('cuentas/', views.account_list, name='account_list'),
+    path('cuentas/auditoria/', views.account_audit, name='account_audit'),
+    path('cuentas/<int:pk>/', views.account_review, name='account_review'),
     path('bloqueo/', views.blocked_view, name='blocked'),
     path(
         'password-reset/',

@@ -11,6 +11,8 @@ class MiPerfilViewTests(TestCase):
 			nombre='Ana',
 			apellido='Perez',
 			cargo='Medico',
+			authorized_role='medico',
+			approval_status='aprobado',
 		)
 
 	def test_muestra_datos_del_usuario_autenticado(self):

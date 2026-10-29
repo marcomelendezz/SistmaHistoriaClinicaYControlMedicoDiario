@@ -1,0 +1,17 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Administración de cuentas{% endblock %}
+{% block content %}
+<h1>Administración de cuentas</h1>
+<p>El rol solicitado no concede acceso hasta su aprobación.</p>
+<a href="{% url 'account_audit' %}" class="btn btn-outline-secondary mb-3">Auditoría de cuentas</a>
+<div class="table-responsive"><table class="table table-striped">
+<thead><tr><th>Persona</th><th>Correo</th><th>Solicitud</th><th>Rol autorizado</th><th>Estado</th><th>Acción</th></tr></thead>
+<tbody>{% for account in accounts %}<tr>
+<td>{{ account.nombre }} {{ account.apellido }}</td><td>{{ account.email }}</td>
+<td>{{ account.get_requested_role_display|default:'Sin verificar' }}</td>
+<td>{{ account.get_authorized_role_display|default:'Sin asignar' }}</td>
+<td>{{ account.get_approval_status_display }}{% if not account.is_active %} · Desactivada{% endif %}</td>
+<td><a href="{% url 'account_review' account.pk %}">Revisar</a></td>
+</tr>{% empty %}<tr><td colspan="6">No hay solicitudes.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

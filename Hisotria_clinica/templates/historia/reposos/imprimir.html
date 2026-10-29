@@ -1,0 +1,5 @@
+{% extends 'base/header_navbar.html' %}{% load static %}
+{% block title %}Imprimir FOR-SSS-07{% endblock %}
+{% block content %}<h1>Imprimir Constancia de Reposo</h1><p>Versión {{ reposo.numero_version }} · PDF definitivo guardado. Selecciona papel A4 vertical a tamaño real.</p>
+<div class="report-actions"><button type="button" class="btn btn-success" id="print-daily-pdf">Imprimir PDF</button><a class="btn btn-outline-success" href="{{ pdf_url }}" target="_blank" rel="noopener">Abrir PDF en otra pestaña</a></div><p id="print-daily-help" role="status"></p>
+<iframe id="daily-pdf" class="pdf-preview" title="Constancia de Reposo FOR-SSS-07" src="{{ pdf_url }}"></iframe><script src="{% static 'base/js/print-daily.js' %}" defer></script>{% endblock %}

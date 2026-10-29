@@ -1,0 +1,12 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Pacientes{% endblock %}
+{% block content %}
+<h1>Pacientes</h1><p>Un expediente por persona, con todas sus consultas.</p>
+<form method="get" class="row g-2 mb-4">
+<div class="col-md-6"><label for="search" class="form-label">Cédula, nombres o apellidos</label><input id="search" name="q" value="{{ query }}" class="form-control"></div>
+<div class="col-md-4"><label for="type" class="form-label">Tipo de paciente</label><select id="type" name="tipo" class="form-select"><option value="">Todos</option>{% for value,label in types %}<option value="{{ value }}" {% if category == value %}selected{% endif %}>{{ label }}</option>{% endfor %}<option value="por_verificar" {% if category == 'por_verificar' %}selected{% endif %}>Clasificación por verificar</option></select></div>
+<div class="col-md-2 d-flex align-items-end"><button class="btn btn-success w-100">Buscar</button></div>
+</form>
+<div class="table-responsive"><table class="table table-striped"><thead><tr><th>Paciente</th><th>Cédula</th><th>Tipo</th><th>Acciones</th></tr></thead><tbody>
+{% for patient in patients %}<tr><td>{{ patient }}</td><td>{{ patient.cedula }}</td><td>{{ patient.categoria_visible }}</td><td><a href="{% url 'detalle_paciente' patient.pk %}">Ver expediente</a></td></tr>{% empty %}<tr><td colspan="4">No se encontraron pacientes.</td></tr>{% endfor %}
+</tbody></table></div>{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base/header_navbar.html' %}{% load tz %}
+{% block title %}Pacientes pendientes{% endblock %}
+{% block content %}{% timezone 'America/Caracas' %}
+<h1>Pacientes pendientes</h1><p>Reporte operativo del estado pendiente actual. Las fechas filtran la llegada, en hora de Caracas. Deja las fechas vacías para ver todas las llegadas que siguen pendientes.</p>
+{% include 'historia/reportes/filtros.html' %}
+{% if report %}<div class="report-summary"><strong>{{ report.count }}</strong> pacientes pendientes · Consulta realizada el {{ report.consulted_at }}.{% if report.start %}<br>Llegadas del {{ report.start }} al {{ report.end }}.{% endif %}</div>
+<div class="table-responsive"><table class="table table-striped report-table"><thead><tr><th scope="col">Paciente / cédula</th><th scope="col">Tipo actual</th><th scope="col">Llegada</th><th scope="col">Motivo de visita</th><th scope="col">Registrada por</th><th scope="col">Enfermera / turno registrados</th><th scope="col">Expediente</th></tr></thead><tbody>
+{% for attention in report.rows %}<tr><td>{{ attention.paciente }}<br>{{ attention.paciente.cedula }}</td><td>{{ attention.paciente.categoria_visible }}</td><td>{{ attention.fecha_hora_llegada }}</td><td class="report-diagnosis">{{ attention.motivo_visita|linebreaksbr }}</td><td>{{ attention.registrada_por }}</td><td>{{ attention.enfermera_responsable|default:'Sin registrar' }}<br>{{ attention.turno|default:'Sin registrar' }}</td><td><a href="{% url 'detalle_paciente' attention.paciente_id %}">Ver expediente</a></td></tr>{% empty %}<tr><td colspan="7">No hay pacientes pendientes para estos filtros.</td></tr>{% endfor %}
+</tbody></table></div><p class="form-text">Este reporte no reconstruye el estado al cierre de días anteriores. Las atenciones ya iniciadas, finalizadas o canceladas no aparecen aquí.</p>{% endif %}
+<p class="mt-3"><a href="{% url 'lista_atenciones' %}?estado=en_atencion">Consultar pacientes en atención</a></p>
+{% endtimezone %}{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Expediente del paciente{% endblock %}
+{% block content %}
+<h1>{{ patient }}</h1><p>Cédula: {{ patient.cedula|default:'Sin registrar' }} · {{ patient.categoria_visible }} · {{ patient.edad_actual }} años</p>
+{% if access.manage_patients %}<a href="{% url 'editar_paciente' patient.pk %}" class="btn btn-outline-success mb-3">Editar datos personales</a>{% endif %}
+<dl><dt>Fecha de nacimiento</dt><dd>{{ patient.fecha_nacimiento }}</dd><dt>Sexo / estado civil</dt><dd>{{ patient.sexo }} / {{ patient.edo_civil }}</dd><dt>Dirección</dt><dd>{{ patient.direccion }}</dd><dt>Teléfono</dt><dd>{{ patient.telefono }}</dd><dt>Contacto de emergencia</dt><dd>{{ patient.contacto_emergencia }}</dd>
+{% if patient.tipo_paciente == 'estudiante' %}<dt>PNF</dt><dd>{{ patient.pnf|default:'Sin registrar' }}</dd>{% elif patient.tipo_paciente and patient.tipo_paciente != 'externo' %}<dt>Cargo</dt><dd>{{ patient.cargo_laboral|default:'Sin registrar' }}</dd>{% endif %}</dl>
+<dl><dt>Lugar de nacimiento</dt><dd>{{ patient.lugar_nacimiento|default:'Sin registrar' }}</dd><dt>Parentesco del contacto de emergencia</dt><dd>{{ patient.parentesco_emergencia|default:'Sin registrar' }}</dd><dt>Teléfono del contacto de emergencia</dt><dd>{{ patient.telefono_emergencia|default:'Sin registrar' }}</dd></dl>
+<h2>Consultas anteriores</h2><div class="table-responsive"><table class="table"><thead><tr><th>Fecha</th><th>Motivo</th><th>Consulta</th></tr></thead><tbody>{% for history in histories %}<tr><td>{{ history.fecha_consulta }}</td><td>{{ history.motivo_consulta|truncatechars:70 }}</td><td><a href="{% url 'detalle_historia' history.pk %}">Ver</a></td></tr>{% empty %}<tr><td colspan="3">No hay consultas registradas.</td></tr>{% endfor %}</tbody></table></div>
+<details><summary>Cambios de datos personales</summary>{% for change in changes %}<article class="audit-event"><p>{{ change.fecha }} · {{ change.usuario }} · {{ change.accion }}</p><p>Antes: {{ change.anteriores }}</p><p>Después: {{ change.nuevos }}</p></article>{% empty %}<p>No hay modificaciones registradas desde la incorporación de la auditoría.</p>{% endfor %}</details>
+{% endblock %}

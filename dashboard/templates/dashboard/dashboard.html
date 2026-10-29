@@ -1,6 +1,7 @@
-{% extends "base/header_navbar.html" %}
-{% load static %}
-{% block title %}Dashboard{% endblock %}
-
-{% block content %}
+{% extends 'base/header_navbar.html' %}
+{% block title %}Inicio{% endblock %}
+{% block content %}<h1>Atención médica UPTAG</h1><p>Bienvenido, {{ user.nombre }}. {{ user.get_authorized_role_display }}.</p>
+<div class="metric-grid"><div class="metric"><strong>{{ pending }}</strong><span>Pacientes pendientes</span></div><div class="metric"><strong>{{ in_progress }}</strong><span>En atención</span></div><div class="metric"><strong>{{ completed_today }}</strong><span>Atenciones completadas hoy</span></div></div>
+<p>Utiliza el menú para registrar fichas personales, recibir pacientes o consultar sus expedientes según tu autorización.</p>
+{% if access.manage_accounts %}<section class="card"><h2>Administración de cuentas</h2><p>Revisa las solicitudes y confirma los roles autorizados.</p></section>{% endif %}
 {% endblock %}

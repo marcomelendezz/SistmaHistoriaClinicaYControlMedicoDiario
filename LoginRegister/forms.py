@@ -1,74 +1,68 @@
 from django import forms
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.core.validators import MinLengthValidator
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.core.exceptions import ValidationError
 from .models import Usuario
-from django.contrib.auth.models import Group
 
-# formulario de registro
-
-User = get_user_model()
 
 class RegistroForm(UserCreationForm):
+    error_messages = {**UserCreationForm.error_messages, 'password_mismatch': 'Las contraseñas no coinciden.'}
+    requested_role = forms.ChoiceField(label='Rol solicitado', choices=[
+        (Usuario.Role.DOCTOR, 'Médico'), (Usuario.Role.NURSE, 'Enfermera'),
+    ])
+
     class Meta:
         model = Usuario
-        fields = ['nombre', 'apellido', 'email', 'cargo']
+        fields = ['nombre', 'apellido', 'email', 'requested_role']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields['password1'].min_length = 16
-        self.fields['password1'].validators.append(MinLengthValidator(
-            16,
-            message='La contraseña es muy corta; debe tener al menos 16 caracteres.',
-        ))
         self.fields['password1'].widget.attrs['minlength'] = 16
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-select' if isinstance(field.widget, forms.Select) else 'form-control'
 
-        # Aplicar clases de Bootstrap a todos los campos
-        for name, field in self.fields.items():
-            if name == 'cargo':
-                field.widget.attrs['class'] = 'form-select form-select-md'
-            else:
-                field.widget.attrs['class'] = 'form-control form-control-md'
-            
-            # Placeholders opcionales
-            field.widget.attrs['placeholder'] = f' {field.label.upper()}'
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip()
+        if Usuario.objects.filter(email__iexact=email).exists():
+            raise ValidationError('Ya existe una cuenta con este correo electrónico.')
+        return email
 
-    def clean_password2(self):
-        password1 = self.data.get(self.add_prefix('password1'), '').strip()
-        password2 = self.cleaned_data.get('password2')
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError('Las contraseñas no coinciden.')
-        return password2
-
-    # funcion para asignar el grupo al usuario registrado
     def save(self, commit=True):
-        user = super().save(commit=commit)       
-        cargo_seleccionado = self.cleaned_data.get('cargo')
-
-        if user and cargo_seleccionado:
-            # Si 'cargo' es una relación ForeignKey a Group o retorna texto, convertimos a string
-            nombre_grupo = str(cargo_seleccionado)
-            
-            try:
-                # 3. Asignamos el grupo que coincide con el nombre del cargo
-                grupo = Group.objects.get(name=nombre_grupo)
-                user.groups.add(grupo)
-            except Group.DoesNotExist:
-                pass  # Si el grupo no está creado en el Admin aún, ignora el error
-
+        user = super().save(commit=False)
+        user.authorized_role = ''
+        user.approval_status = Usuario.Status.PENDING
+        user.is_staff = False
+        user.is_superuser = False
+        user.cargo = 'Medico' if user.requested_role == Usuario.Role.DOCTOR else 'Enfermero/a'
+        if commit:
+            user.save()
         return user
 
-# formulario de inicio de sesión
 
 class CustomLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({
-            'class': 'form-control form-control-md',
-            'placeholder': 'CORREO ELECTRONICO'
-        })
-        self.fields['password'].widget.attrs.update({
-            'class': 'form-control form-control-md',
-            'placeholder': 'CONTRASEÑA'
-            
-        })
+        self.fields['username'].widget.attrs.update({'class': 'form-control', 'placeholder': 'CORREO ELECTRÓNICO'})
+        self.fields['password'].widget.attrs.update({'class': 'form-control', 'placeholder': 'CONTRASEÑA'})
+
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if user.approval_status != Usuario.Status.APPROVED or user.authorized_role not in Usuario.Role.values:
+            raise ValidationError('Tu cuenta está pendiente de aprobación o no está autorizada. Contacta al administrador.', code='unapproved')
+
+
+class AccountReviewForm(forms.Form):
+    action = forms.ChoiceField(label='Acción', choices=[
+        ('approve', 'Aprobar / asignar rol'), ('reject', 'Rechazar'),
+        ('deactivate', 'Desactivar'), ('activate', 'Activar cuenta aprobada'),
+    ])
+    role = forms.ChoiceField(label='Rol autorizado', required=False, choices=[('', 'Seleccione...'), *Usuario.Role.choices])
+    reason = forms.CharField(label='Observación (opcional)', required=False,
+        widget=forms.Textarea(attrs={'rows': 2}), max_length=2000,
+        help_text='No es necesaria para aprobar, asignar rol o rechazar una solicitud.')
+
+    def clean(self):
+        data = super().clean()
+        if data.get('action') == 'approve' and not data.get('role'):
+            self.add_error('role', 'Selecciona el rol autorizado.')
+        return data

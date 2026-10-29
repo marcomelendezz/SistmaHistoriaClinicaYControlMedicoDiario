@@ -1,0 +1,8 @@
+{% extends 'base/header_navbar.html' %}{% load static %}
+{% block title %}Imprimir FOR-SSS-02{% endblock %}
+{% block content %}<h1>Imprimir Registro Médico Diario</h1>
+<p>Revisa el documento antes de imprimir. Selecciona papel A4 horizontal y tamaño real. También puedes usar el botón de impresión del visor PDF.</p>
+<div class="report-actions"><button type="button" class="btn btn-success" id="print-daily-pdf">Imprimir PDF</button><a href="{{ pdf_url }}" target="_blank" rel="noopener" class="btn btn-outline-success">Abrir PDF en otra pestaña</a></div>
+<p id="print-daily-help" role="status"></p>
+<iframe id="daily-pdf" class="pdf-preview" title="Registro Médico Diario FOR-SSS-02" src="{{ pdf_url }}"></iframe>
+<script src="{% static 'base/js/print-daily.js' %}" defer></script>{% endblock %}

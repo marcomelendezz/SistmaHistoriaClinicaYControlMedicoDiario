@@ -1,0 +1,19 @@
+{% extends 'base/header_navbar.html' %}{% load static %}
+{% block title %}Constancia FOR-SSS-07{% endblock %}
+{% block content %}<h1>Constancia de Reposo FOR-SSS-07</h1><p>Versión {{ reposo.numero_version }} · {{ reposo.get_estado_display }}</p>
+<dl><dt>Paciente</dt><dd>{{ snapshot.paciente.nombre_completo }} · {{ snapshot.paciente.cedula }}</dd><dt>Médico responsable</dt><dd>{{ snapshot.medico.nombre_completo }}</dd>
+<dt>Período de reposo</dt><dd>{{ snapshot.fecha_inicio }} a {{ snapshot.fecha_fin }} · {{ snapshot.dias }} días</dd><dt>Motivo</dt><dd>{{ snapshot.motivo_reposo|linebreaksbr }}</dd><dt>Fecha de emisión</dt><dd>{{ snapshot.fecha_emision }}</dd></dl>
+{% if reposo.anterior_id %}<p>Corrige la <a href="{% url 'detalle_reposo' reposo.anterior_id %}">versión anterior</a>. Motivo: {{ reposo.motivo_correccion }}</p>{% endif %}
+{% if reposo.estado == 'borrador' %}
+<p class="report-warning">BORRADOR: no es una constancia aprobada. Revisa el PDF completo. Si cambian los datos, debes abrir una vista previa nueva.</p>
+<a class="btn btn-outline-success" href="{% url 'editar_reposo' reposo.pk %}">Modificar borrador</a><a class="btn btn-outline-success" target="_blank" rel="noopener" href="{% url 'preview_reposo' reposo.pk %}">Abrir vista previa</a>
+<iframe class="pdf-preview" title="Borrador de reposo sin aprobación" src="{% url 'preview_reposo' reposo.pk %}"></iframe>
+<form method="post" action="{% url 'aprobar_reposo' reposo.pk %}" class="clinical-form">{% csrf_token %}{{ approval_form.non_field_errors }}{% for hidden in approval_form.hidden_fields %}{{ hidden }}{% endfor %}
+<div class="clinical-options"><label for="{{ approval_form.confirmacion.id_for_label }}">{{ approval_form.confirmacion }} {{ approval_form.confirmacion.label }}</label></div><button class="btn btn-success" type="submit">Aprobar y guardar PDF definitivo</button></form>
+{% else %}
+<p class="report-notice">Aprobada el {{ reposo.aprobado_en }} por {{ snapshot.medico.nombre_completo }}. El PDF de esta versión permanece inmutable.</p>
+<div class="report-actions"><a class="btn btn-success" target="_blank" rel="noopener" href="{% url 'reposo_pdf' reposo.pk %}">Visualizar PDF definitivo</a><a class="btn btn-outline-success" href="{% url 'reposo_pdf' reposo.pk %}?download=1">Descargar PDF</a><a class="btn btn-outline-success" target="_blank" rel="noopener" href="{% url 'imprimir_reposo' reposo.pk %}">Imprimir</a>
+{% if access.manage_reposo and can_create_version %}<a class="btn btn-outline-success" href="{% url 'nuevo_reposo' reposo.historia_id %}?anterior={{ reposo.pk }}">Preparar nueva versión</a>{% endif %}</div>
+{% if following %}<p><a href="{% url 'detalle_reposo' following.pk %}">Consultar versión {{ following.numero_version }} · {{ following.get_estado_display }}</a></p>{% endif %}
+<p class="form-text">SHA-256: <code>{{ reposo.pdf_sha256 }}</code></p>
+{% endif %}<p><a href="{% url 'detalle_historia' reposo.historia_id %}">Volver a la consulta</a></p>{% endblock %}

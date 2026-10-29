@@ -1,0 +1,23 @@
+{% extends 'base/header_navbar.html' %}{% load tz %}
+{% block title %}Registro Médico Diario{% endblock %}
+{% block content %}{% timezone 'America/Caracas' %}
+<h1>Registro Médico Diario</h1>
+<p>Atenciones finalizadas con historia clínica y trazabilidad completas. Se agrupan por fecha de finalización y equipo registrado, en hora de Caracas.</p>
+<p class="report-notice">Formato FOR-SSS-02: las casillas seleccionadas se marcan con X. No se interpreta el significado de las abreviaturas.</p>
+{% include 'historia/reportes/filtros.html' %}
+{% if report %}
+<div class="report-summary"><strong>{{ report.count }}</strong> atenciones incluidas · Del {{ report.start }} al {{ report.end }}.</div>
+<div class="report-actions"><a class="btn btn-success" target="_blank" rel="noopener" href="{% url 'registro_diario_pdf' %}?{{ report_query }}">Visualizar PDF</a><a class="btn btn-outline-success" href="{% url 'registro_diario_pdf' %}?{{ report_query }}&amp;download=1">Descargar PDF</a><a class="btn btn-outline-success" target="_blank" rel="noopener" href="{% url 'imprimir_registro_diario' %}?{{ report_query }}">Imprimir</a></div>
+{% if report.excluded_count %}<section class="report-warning" role="status"><h2>Atenciones que necesitan revisión</h2><p>{{ report.excluded_count }} atenciones figuran como atendidas pero carecen de datos o trazabilidad coherentes. No están incluidas en los totales.</p>
+<ul>{% for item in report.excluded_samples %}<li>Atención {{ item.attention.pk }} · {{ item.attention.paciente }} · {{ item.attention.actualizada_en }}: {{ item.reason }}</li>{% endfor %}</ul><p>Se muestran hasta 50 incidencias. No se modifica ningún registro.</p></section>{% endif %}
+{% for day in report.days %}<section class="daily-section" aria-label="Registro del {{ day.date|date:'Y-m-d' }}">
+<h2>{{ day.date }} <span class="report-count">{{ day.count }} atenciones</span></h2>
+{% for team in day.teams %}<article class="report-team"><div class="team-header"><p><strong>Médico:</strong> {{ team.doctor }}</p><p><strong>Enfermera responsable:</strong> {{ team.nurse|default:'Sin registrar' }}</p><p><strong>Turno:</strong> {{ team.shift|default:'Sin registrar' }}</p><p><strong>Total del equipo:</strong> {{ team.rows|length }}</p></div>
+<div class="table-responsive"><table class="table table-striped report-table daily-report-table"><thead><tr><th scope="col">N.º</th><th scope="col">Paciente / cédula</th><th scope="col">Tipo actual</th><th scope="col">Edad al finalizar</th><th scope="col">Sexo</th><th scope="col">Diagnóstico</th>{% for code, label in daily_options %}<th scope="col">{{ label }}</th>{% endfor %}<th scope="col">Finalización / responsable</th><th scope="col">Consulta</th></tr></thead><tbody>
+{% for row in team.rows %}<tr><td>{{ forloop.counter }}</td><td><a href="{% url 'detalle_paciente' row.attention.paciente_id %}">{{ row.attention.paciente.apellido }}, {{ row.attention.paciente.nombre }}</a><br>{{ row.attention.paciente.cedula }}</td><td>{{ row.attention.paciente.categoria_visible }}</td><td>{{ row.age|default_if_none:'Por verificar' }}</td><td>{{ row.attention.paciente.sexo|default:'Sin registrar' }}</td><td class="report-diagnosis">{{ row.history.diagnostico|linebreaksbr }}</td>{% for option in row.options %}<td>{% if option.selected %}X{% endif %}</td>{% endfor %}<td>{{ row.completed_at|date:'H:i' }}<br>{{ row.attention.actualizada_por }}</td><td><a href="{% url 'detalle_historia' row.history.pk %}">Ver historia</a></td></tr>{% endfor %}
+</tbody></table></div></article>{% empty %}<p class="empty-report">No hay atenciones finalizadas verificables para esta fecha.</p>{% endfor %}
+<p class="daily-total"><strong>Total del día: {{ day.count }}</strong></p></section>{% endfor %}
+{% if report.legacy_count %}<section class="report-warning"><h2>Consultas históricas sin atención trazable</h2><p>{{ report.legacy_count }} consultas tienen fecha de consulta dentro del rango, pero no una atención relacionada. Permanecen consultables y no se incluyen automáticamente en el diario. Su inclusión requiere validación institucional.</p>
+<ul>{% for history in report.legacy_samples %}<li>{{ history.fecha_consulta }} · {{ history.estudiante }} · <a href="{% url 'detalle_historia' history.pk %}">Consultar historia {{ history.pk }}</a></li>{% endfor %}</ul><p>Se muestran hasta 50 referencias; el historial completo sigue en los expedientes.</p></section>{% endif %}
+<p class="form-text">Se muestran los datos vigentes del expediente y de la historia. Las correcciones conservan su auditoría y no cambian la fecha de finalización de la atención.</p>
+{% endif %}{% endtimezone %}{% endblock %}

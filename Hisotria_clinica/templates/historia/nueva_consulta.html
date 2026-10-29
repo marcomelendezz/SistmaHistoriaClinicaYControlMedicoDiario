@@ -1,66 +1,7 @@
-{% extends "base/header_navbar.html" %}
-{% load static %}
-
-{% block title %}Nueva Consulta{% endblock %}
-
-{% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Nueva consulta</h1>
-    </div>
-
-    <div class="mb-4">
-        <form method="get" class="d-flex gap-2 align-items-center">
-            <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Buscar estudiante por nombre, apellido o cédula">
-            <button class="btn btn-dark" type="submit">Buscar</button>
-        </form>
-    </div>
-
-    {% if query %}
-        {% if estudiantes %}
-            <div class="mb-4">
-                <h5 class="mb-3">Resultados</h5>
-                <div class="list-group">
-                    {% for estudiante in estudiantes %}
-                        <form method="post" class="list-group-item list-group-item-action p-0 border-0">
-                            {% csrf_token %}
-                            <input type="hidden" name="estudiante" value="{{ estudiante.id }}">
-                            <button type="submit" class="btn btn-light w-100 text-start px-3 py-3 border rounded-0">
-                                <strong>{{ estudiante.nombre }} {{ estudiante.apellido }}</strong>
-                                <span class="text-muted d-block">Cédula: {{ estudiante.cedula }}</span>
-                            </button>
-                        </form>
-                    {% endfor %}
-                </div>
-            </div>
-        {% else %}
-            <div class="alert alert-warning">No se encontraron estudiantes con ese criterio.</div>
-        {% endif %}
-    {% endif %}
-
-    {% if selected_estudiante %}
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-dark text-white">
-                <strong>Historia clínica de {{ selected_estudiante.nombre }} {{ selected_estudiante.apellido }}</strong>
-            </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="estudiante" value="{{ selected_estudiante.id }}">
-
-                    {% for field in historia_form %}
-                        <div class="mb-3">
-                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                            {{ field }}
-                        </div>
-                    {% endfor %}
-
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary">Guardar consulta</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    {% endif %}
-</div>
+{% extends 'base/header_navbar.html' %}
+{% block title %}Nueva consulta{% endblock %}
+{% block content %}<h1>Nueva consulta</h1><p>Busca una ficha existente y registra su llegada. La información clínica se completa durante la atención médica.</p>
+<form method="get" class="row g-2 mb-4"><div class="col-md-6"><label for="search" class="form-label">Cédula, nombres o apellidos</label><input id="search" class="form-control" name="q" value="{{ query }}"></div><div class="col-md-4"><label for="type" class="form-label">Tipo de paciente</label><select id="type" name="tipo" class="form-select"><option value="">Todos</option>{% for value,label in types %}<option value="{{ value }}" {% if category == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div><div class="col-md-2 d-flex align-items-end"><button class="btn btn-success w-100">Buscar</button></div></form>
+{% if query or category %}<div class="list-group mb-4">{% for patient in patients %}<a class="list-group-item list-group-item-action" href="?estudiante={{ patient.pk }}&amp;q={{ query|urlencode }}&amp;tipo={{ category|urlencode }}">{{ patient }} · {{ patient.cedula }} · {{ patient.categoria_visible }}</a>{% empty %}<p>No se encontraron pacientes. Registra primero su ficha personal.</p>{% endfor %}</div>{% endif %}
+{% if selected %}<section class="card p-3"><h2>{{ selected }}</h2><p>{{ selected.cedula }} · {{ selected.categoria_visible }}</p><form method="post">{% csrf_token %}<input type="hidden" name="estudiante" value="{{ selected.pk }}">{{ form.as_p }}<button type="submit" class="btn btn-success">Registrar llegada pendiente</button></form></section>{% else %}{{ form.non_field_errors }}<p>Selecciona un paciente de los resultados para continuar.</p>{% endif %}
 {% endblock %}

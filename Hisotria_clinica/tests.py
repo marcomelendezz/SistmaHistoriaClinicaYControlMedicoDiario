@@ -1,32 +1,29 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
-from .models import Estudiante, HistoriaClinica
+from LoginRegister.test_security import account, login_as
+from .models import Atencion, Estudiante, HistoriaClinica
+from .test_patients import personal_data
+from .test_workflow import CLINICAL
 
 
 class HistoriaClinicaViewTests(TestCase):
-    def test_creates_student_and_history_from_forms(self):
-        payload = {
-            'nombre': 'Ana',
-            'apellido': 'Gómez',
-            'cedula': '12345678',
-            'edad': 28,
-            'edo_civil': 'Soltera',
-            'sexo': 'Femenino',
-            'direccion': 'Calle 1',
-            'contacto_emergencia': 'Pedro Gómez',
-            'telefono': '04145556677',
-            'fecha_nacimiento': '1998-04-15',
-            'fecha_consulta': '2026-09-26',
-            'motivo_consulta': 'Dolor de cabeza',
-            'diagnostico': 'Migraña',
-            'tratamiento': 'Tomar acetaminofén',
-            'observaciones': 'Sin novedad',
-        }
-
-        response = self.client.post(reverse('registro_historia'), payload)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(Estudiante.objects.count(), 1)
-        self.assertEqual(HistoriaClinica.objects.count(), 1)
-        self.assertEqual(HistoriaClinica.objects.first().estudiante.nombre, 'Ana')
+    def test_patient_arrival_and_medical_consultation_are_separate(self):
+        doctor = account('doctor@example.invalid', 'medico')
+        login_as(self.client, doctor)
+        self.assertEqual(self.client.post(reverse('registro_historia'), {**personal_data(), **CLINICAL}).status_code, 405)
+        self.assertEqual(Estudiante.objects.count(), 0)
+        self.assertEqual(self.client.post(reverse('registro_paciente'), personal_data()).status_code, 302)
+        patient = Estudiante.objects.get()
+        self.assertEqual(HistoriaClinica.objects.count(), 0)
+        self.assertEqual(Atencion.objects.count(), 0)
+        self.assertEqual(self.client.post(reverse('nueva_consulta'), {'estudiante': patient.pk,
+            'arrival': timezone.localtime().strftime('%Y-%m-%dT%H:%M'), 'reason': 'Motivo ficticio'}).status_code, 302)
+        attention = Atencion.objects.get()
+        self.assertEqual(HistoriaClinica.objects.count(), 0)
+        self.client.post(reverse('cambiar_estado', args=[attention.pk]), {'target': 'en_atencion', 'expected_version': 0})
+        self.assertEqual(self.client.post(reverse('consulta_medica', args=[attention.pk]), CLINICAL).status_code, 302)
+        self.assertEqual(HistoriaClinica.objects.get().estudiante_id, patient.pk)
+        attention.refresh_from_db()
+        self.assertEqual(attention.estado, 'atendido')

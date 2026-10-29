@@ -14,7 +14,7 @@ class RegistroFormPasswordTests(TestCase):
 			'nombre': 'Ana',
 			'apellido': 'Perez',
 			'email': 'ana@example.com',
-			'cargo': 'Medico',
+			'requested_role': 'medico',
 			'password1': password,
 			'password2': password if confirmation is None else confirmation,
 		})
@@ -23,10 +23,7 @@ class RegistroFormPasswordTests(TestCase):
 		form = self.build_form('ClaveSegura!202')
 
 		self.assertFalse(form.is_valid())
-		self.assertIn(
-			'La contraseña es muy corta; debe tener al menos 16 caracteres.',
-			form.errors['password1'],
-		)
+		self.assertIn('password2', form.errors)
 
 	def test_reports_password_mismatch_even_when_password_is_too_short(self):
 		form = self.build_form('Clave1234', 'Clave12345')

@@ -1,18 +1,25 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
+from LoginRegister.access import capability_required
 from .forms import PerfilForm
+from django.utils import timezone
+from Hisotria_clinica.services import attentions_for
 
 # Create your views here.
 
-@login_required
+@capability_required('read_clinical')
 def dashboard_view(request):
-    return render(request, 'dashboard/dashboard.html')
+    attentions = attentions_for(request.user)
+    return render(request, 'dashboard/dashboard.html', {
+        'pending': attentions.filter(estado='pendiente').count(),
+        'in_progress': attentions.filter(estado='en_atencion').count(),
+        'completed_today': attentions.filter(actualizada_en__date=timezone.localdate(), estado='atendido', historia__isnull=False).count(),
+    })
 
-@login_required(login_url='login')
+@capability_required('read_clinical')
 def mi_perfil_view(request):
     return render(request, 'dashboard/mi_perfil.html', {'perfil': request.user})
 
-@login_required(login_url='login')
+@capability_required('read_clinical')
 def editar_perfil_view(request):
     if request.method == 'POST':
         form = PerfilForm(request.POST, instance=request.user)

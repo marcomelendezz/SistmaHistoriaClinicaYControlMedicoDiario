@@ -1,0 +1,10 @@
+{% extends 'base/header_navbar.html' %}
+{% block title %}Auditoría de cuentas{% endblock %}
+{% block content %}
+<h1>Auditoría de cuentas</h1><p>Últimos 200 eventos. Esta pantalla es de solo lectura.</p>
+<div class="table-responsive"><table class="table table-striped">
+<thead><tr><th>Fecha</th><th>Responsable</th><th>Cuenta</th><th>Acción / motivo</th><th>Antes</th><th>Después</th></tr></thead>
+<tbody>{% for event in events %}<tr><td>{{ event.created_at }}</td><td>{{ event.actor.email }}</td><td>{{ event.target.email }}</td>
+<td>{{ event.action }}: {{ event.reason }}</td><td>{{ event.before }}</td><td>{{ event.after }}</td></tr>
+{% empty %}<tr><td colspan="6">No hay cambios registrados.</td></tr>{% endfor %}</tbody>
+</table></div>{% endblock %}

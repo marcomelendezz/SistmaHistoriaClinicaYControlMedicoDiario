@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,7 @@
     <title>Inicio de sesion</title>
 </head>
 <body>
+    {% for message in messages %}<div class="alert alert-info" role="status">{{ message }}</div>{% endfor %}
 <header>
     <img src="{% static 'base/img/logo_univ_uptag.png' %}" alt="Logo de la uni" class="logo_uni">
 </header>
